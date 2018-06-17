@@ -1,0 +1,47 @@
+#한성과학고등학교 정보 수행 - 1106 김민수, 1116 이소우
+import csv
+import folium
+m = folium.Map(location=[37.52136227, 126.8728342], 
+               zoom_start=11)
+a = input('식당의 종류를 말하세요: ')
+x = open('서울 음식점.csv')
+station = ['신촌', '역삼', '건대입구']
+location = ['창천동', '역삼동', '방화동']
+population = [3014620, 2964312, 2921391]
+rate = []
+
+data1 = csv.reader(x)
+cnt1 = 0
+cnt2 = 0
+cnt3 = 0
+for i in range(3) :
+    for row in data1 : 
+        if a in row[4] and location[0]==row[8] :
+            cnt1 = cnt1 + 1 
+        if a in row[4] and location[1]==row[8] :
+            cnt2 = cnt2 + 1
+        if a in row[4] and location[2]==row[8] :
+            cnt3 = cnt3 + 1
+if cnt1!=0 :
+    rate.append(population[0]/(cnt1))
+if cnt1 == 0 :
+    rate.append(1000000000000000000)
+
+if cnt2!=0 :
+    rate.append(population[0]/(cnt2))
+if cnt2 == 0 :
+    rate.append(1000000000000000000)
+
+if cnt3!=0 :
+    rate.append(population[0]/(cnt3))
+if cnt3 == 0 :
+    rate.append(1000000000000000000)
+
+k = station[rate.index(min(rate))]
+print(k, '역 주변에서 사람이 덜 몰리네요!')
+print(k, '주변의', a, '관련 음식점을 보여드릴게요')
+
+for row in data1 :
+    if location[rate.index(min(rate))] == row[8] :
+        folium.Marker([float(row[14]), float(row[13])], popup=row[0]).add_to(m)
+m
